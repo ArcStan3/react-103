@@ -4,17 +4,25 @@ import ReactDOM from 'react-dom';
 import { createStore } from 'redux'
 import { Provider, connect } from 'react-redux'
 import { merge, map, append } from 'ramda'
-const store = createStore(function (state, action) {
-  if (!state) { state = { title: "Hello Redux", counter: 0, items: [], itemText: '' } }
-  if (action.type === 'SET_TITLE') { return merge(state, { title: action.payload }) }
-  if (action.type === 'INCR') { return merge(state, { counter: state.counter + 1 }) }
-  if (action.type === 'DECR') { return merge(state, { counter: state.counter - 1 }) }
-  if (action.type === 'SET') { return merge(state, { itemText: action.payload }) }
-  if (action.type === 'ADD') { return merge(state, {
-    itemText: '',
-    items: append(state.itemText, state.items)
-  })}
-  return state
+const initialState = { title: "Hello Redux", counter: 0, items: [], itemText: '' }
+
+const store = createStore(function (state=initialState, action) {
+  switch (action.type) {
+    case 'SET_TITLE':
+      return merge(state, { title: action.payload })
+    case 'INCR':
+      return merge(state, { counter: state.counter + 1 })
+    case 'DECR':
+      return merge(state, { counter: state.counter - 1 })
+    case 'SET':
+      return merge(state, { itemText: action.payload })
+    case 'ADD':
+      return merge(state, {
+        itemText: '',
+        items: append(state.itemText, state.items)
+      })
+    default: return state
+  }
 })
 
 function App (props) {
